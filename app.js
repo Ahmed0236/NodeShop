@@ -19,14 +19,6 @@ const authRouters = require("./routes/auth.js");
 const errorController = require("./controllers/error");
 const User = require("./models/user");
 
-//AWS
-// const MONGODB_URI =
-//   "mongodb+srv://ahmed:teradata123@cluster0.ywg6xca.mongodb.net/shop?retryWrites=true&w=majority";
-
-//GCP
-// const MONGODB_URI =
-//   "mongodb+srv://ahmed:teradata123@cluster0.v3wmtkn.mongodb.net/shop?retryWrites=true&w=majority";
-
 const MONGODB_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.v3wmtkn.mongodb.net/${process.env.MONGO_DEFAULT_DATABASE}`;
 
 const app = express();
@@ -67,6 +59,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
 );
+
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, PATCH, DELETE"
+  );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
 
 app.use(helmet());
 app.use(compression());
